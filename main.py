@@ -7,9 +7,9 @@ def add_new_student(name):
     if name not in students:
         students[name] = {}
 
-def add_new_course(name):
+def add_new_course(name, points):
     if name not in courses:
-        courses[name] = []
+        courses[name] = { "points": points, "students": []}
 
 def remove_student(name):
     if name in students:
@@ -32,7 +32,7 @@ def assign_course_to_student(student_name, course_name):
         return
     
     students[student_name][course_name] = UNSCORED
-    courses[course_name].append(student_name)
+    courses[course_name]["students"].append(student_name)
 
 def set_score_to_course_for_student(student_name, course_name, score):
     if student_name not in students:
@@ -69,7 +69,17 @@ def get_weighted_average(student_name):
         #ERROR
         return 0
         
-    return sum(students[student_name].values())/len(students[student_name].values())
+    points_sum = 0
+    total_sum = 0
+    for course_name, score in students[student_name]:
+        points_sum += courses[course_name]["points"]
+        total_sum += courses[course_name]["points"] * score
+    
+    if points_sum == 0:
+        #ERROR
+        return
+        
+    return total_sum / points_sum
 
 def get_all_students_with_average_above_90():
     result = []
