@@ -72,6 +72,8 @@ def get_weighted_average(student_name):
     points_sum = 0
     total_sum = 0
     for course_name, score in students[student_name]:
+        if score == UNSCORED:
+            continue
         points_sum += courses[course_name]["points"]
         total_sum += courses[course_name]["points"] * score
     
