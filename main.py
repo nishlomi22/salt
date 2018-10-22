@@ -60,16 +60,14 @@ def get_all_students_assign_to_course(course_name):
         #ERROR
         return
     
-    for student_name in students.keys():
-        assign_course_to_student(student_name,course_name)
+    return courses[course_name]["students"]
 
-def get_all_courses_assign_to_student(course_name):
+def get_all_courses_assign_to_student(student_name):
     if student_name not in students:
         #ERROR
         return
     
-    for course_name in courses.keys():
-        assign_course_to_student(student_name,course_name)
+    students[student_name].keys()
 
 def get_weighted_average(student_name):
     if student_name not in students:
