@@ -15,9 +15,19 @@ def remove_student(name):
     if name in students:
         del students[name]        
 
+    #delete student from all courses
+    for course_details in courses.values():
+        if name in course_details["students"]:
+            course_details["students"].remove(name)
+        
 def remove_course(name):
     if name in courses:
         del courses[name]
+    
+    #delete course from all students
+    for student_courses in students.values():
+        if course_name in student_courses:
+            del student_courses[course_name]
 
 def assign_course_to_student(student_name, course_name):
     if student_name not in students:
