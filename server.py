@@ -11,21 +11,18 @@ students = {}
 courses = {}
 
 @app.route('/students/<string:name>', methods=['POST'])
-def add_new_student(self, name):
+def add_new_student(name):
     if name not in students:
         students[name] = {}
     
     return jsonify(name)
 
 @app.route('/courses/<string:name>', methods=['POST'])
-def add_new_course(self, name):
-    points = request.json['points']
+def add_new_course(name):
+    points = int(request.json['points'])
 
     if name not in courses:
         courses[name] = {"points": points, "students": []}
-        
-    return name, 201
-
     return jsonify(name)
 
     
@@ -59,7 +56,7 @@ def remove_course(name):
     return jsonify({'status': 'success'})
 
 @app.route('/courses/<string:course_name>', methods=['PUT'])
-def assign_course_to_student(self, course_name):
+def assign_course_to_student(course_name):
     student_name = request.json['student_name']
     
     if student_name not in students or \
@@ -73,9 +70,9 @@ def assign_course_to_student(self, course_name):
     return jsonify({'status': 'success'})
 
 @app.route('/students/<string:student_name>', methods=['PUT'])
-def set_score_to_course_for_student(score):
+def set_score_to_course_for_student(student_name):
     course_name = request.json['course_name']
-    score = request.json['score']
+    score = int(request.json['score'])
     
     if student_name not in students or \
        course_name not in courses:
@@ -85,7 +82,7 @@ def set_score_to_course_for_student(score):
     
     return jsonify({'status': 'success'})
 
-@app.route('/student_list/<string:course_name>', methods=['GET'])        
+@app.route('/students_list/<string:course_name>', methods=['GET'])        
 def get_all_students_assign_to_course(course_name):
     if course_name not in courses:
         abort(404)
@@ -94,6 +91,7 @@ def get_all_students_assign_to_course(course_name):
 
 @app.route('/courses_list/<string:student_name>', methods=['GET'])        
 def get_all_courses_assign_to_student(student_name):
+    print students,student_name
     if student_name not in students:
         abort(404)
     
@@ -107,7 +105,7 @@ def get_weighted_average(student_name):
         
     points_sum = 0
     total_sum = 0
-    for course_name, score in students[student_name]:
+    for course_name, score in students[student_name].iteritems():
         if score == UNSCORED:
             continue
         points_sum += courses[course_name]["points"]
@@ -116,7 +114,7 @@ def get_weighted_average(student_name):
     if points_sum == 0:
         return UNSCORED
         
-    return total_sum / points_sum
+    return jsonify(total_sum / points_sum)
 
 @app.route('/excellent_students', methods=['GET'])    
 def get_all_students_with_average_above_90():
